@@ -8,7 +8,13 @@ QueryClient,
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions:{
+    queries:{
+      refetchOnReconnect:true,
+    }
+  }
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
