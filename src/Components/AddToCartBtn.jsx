@@ -1,6 +1,6 @@
 import React from 'react'
 import { BiSolidCartAdd } from 'react-icons/bi'
-import { toast } from 'react-toastify'
+import { AddItemsToCart } from '../actions/CartActions'
 
 // button classnames depeding on size as sm, md, lg to vary width and padding
 const sizes = {
@@ -10,15 +10,11 @@ const sizes = {
 }
 
 
-const AddToCartBtn = ({item, size}) => {
+const AddToCartBtn = ({item, size, userid}) => {
   return (
-    <button onClick={()=>{
+    <button onClick={async()=>{
         // add to cart function
-        toast(`${item.title} added to cart`, {
-          theme: "colored",
-          position: "top-center",
-          type: 'success'
-        })
+      await AddItemsToCart(userid, item.id)
       }}
    className={(size ==='lg')? sizes.lg : sizes.sm }>
       Add to Cart

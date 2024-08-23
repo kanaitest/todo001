@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useProductActions } from "../actions/ProductsActions";
-import { ClipLoader } from "react-spinners";
 import AddToCartBtn from "../Components/AddToCartBtn";
+import { ClipLoader } from "react-spinners";
 
 // css for spinner
 const override = {

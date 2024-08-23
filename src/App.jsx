@@ -39,7 +39,7 @@ function App() {
           </NavLink>
         </nav>
       </div>
-      <div className="text-xl font-bold mt-4 ">
+      <div className="w-full text-xl font-bold mt-4 ">
         <Routes>
           <Route path="/" loader element={<HomePage />} />
 

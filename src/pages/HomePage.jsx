@@ -19,7 +19,7 @@ const HomePage = () => {
   });
 
   return (
-    <div className="w-full p-2 flex flex-col items-center justify-center text-pretty mb-4 ">
+    <div className="w-full min-h-[60vh] max-h-fit p-2 flex flex-col items-center justify-center text-pretty mb-4 ">
       <h1 className="text-5xl md:text-6xl my-4 bg-gradient-to-tr from-purple-400 to-cyan-500 bg-clip-text text-transparent leading-normal font-extrabold ">
         ElectroSpace
       </h1>
@@ -33,7 +33,7 @@ const HomePage = () => {
         Explore our wide selection of top brands and discover incredible deals
         that will make your heart race (and your wallet happy!)
       </p>
-      <h2 className="text-2xl font-bold mb-6 bg-gradient-to-bl from-purple-400 to-cyan-500 bg-clip-text text-transparent">
+      <h2 className="text-2xl font-bold mb-auto bg-gradient-to-bl from-purple-400 to-cyan-500 bg-clip-text text-transparent">
         Featured Products
       </h2>
       {isLoading && (
