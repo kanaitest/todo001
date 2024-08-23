@@ -8,26 +8,31 @@ import "react-toastify/dist/ReactToastify.css";
 import Cart from "./pages/Cart";
 import { MdEmail } from "react-icons/md";
 import { BiPhone } from "react-icons/bi";
+import SignInPage from "./pages/Sign-in";
+
+
+// navlink classes for active,  
 
 function App() {
+
   return (
     <div className="w-full min-h-screen max-h-fit flex flex-col items-center transition-all ease-in justify-between ">
-      <div className="w-full flex border-2  justify-center align-middle p-4 rounded-md shadow-md sticky top-0 z-10 backdrop-blur-lg ">
-        <nav className="w-full flex gap-4 justify-center text-lg font-semibold ">
+      <div className="w-full flex border-2  justify-center align-middle px-4 py-8 rounded-md shadow-md sticky top-0 z-10 backdrop-blur-lg ">
+        <nav className="w-full flex gap-4 justify-center font-semibold">
           <NavLink
-            className="active:text-cyan-400 text-sky-800 active:underline"
+            className="text-xl hover:underline active:text-cyan-400 text-sky-800 active:underline"
             to="/"
           >
             Home
           </NavLink>
           <NavLink
-            className="active:text-cyan-400 text-sky-800 active:underline"
+            className="text-xl hover:underline active:text-cyan-400 text-sky-800 active:underline"
             to="/cart"
           >
             Cart
           </NavLink>
           <NavLink
-            className="active:text-cyan-400 text-sky-800 active:underline"
+            className="text-xl hover:underline active:text-cyan-400 text-sky-800 active:underline"
             to="/profile"
           >
             Profile
@@ -45,10 +50,14 @@ function App() {
             element={<ProductPage />}
             loader={({ params }) => console.table(params)}
           />
+          <Route
+            path="/sign-in"
+            element={<SignInPage />}
+          />
         </Routes>
       </div>
 
-      <footer className="w-full p-2 flex items-center justify-around align-middle mt-4 flex-wrap md:flex-nowrap">
+      <footer className="w-full p-2 flex items-center justify-around align-middle mt-4 flex-wrap md:flex-nowrap bg-slate-100">
         <div className="p-2">
           <h1 className="text-3xl bg-gradient-to-bl from-purple-400 to-cyan-500 bg-clip-text text-transparent">
             ElectroSpace
@@ -95,7 +104,6 @@ function App() {
             <li className="rounded-full p-2 bg-slate-100 flex gap-2 align-middle cursor-pointer hover:bg-cyan-300">
               Mail us <MdEmail className="w-6 h-6" />
             </li>
-
             <li className="rounded-full p-2 bg-slate-100 flex gap-2 align-middle cursor-pointer hover:bg-cyan-300">
               Call us <BiPhone className="w-6 h-6" />
             </li>
