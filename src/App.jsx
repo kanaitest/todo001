@@ -58,7 +58,7 @@ function App() {
       </div>
 
       <footer className="w-full p-2 flex items-center justify-around align-middle mt-4 flex-wrap md:flex-nowrap bg-slate-100">
-        <div className="p-2">
+        <div className="p-2" id="hero">
           <h1 className="text-3xl bg-gradient-to-bl from-purple-400 to-cyan-500 bg-clip-text text-transparent">
             ElectroSpace
           </h1>
@@ -74,7 +74,7 @@ function App() {
             <li className="my-2">
               <NavLink
                 className="active:text-cyan-400 text-sky-800 active:underline"
-                to="/"
+                to="/#hero"
               >
                 Home
               </NavLink>
@@ -111,7 +111,7 @@ function App() {
         </div>
       </footer>
       <ReactQueryDevtools initialIsOpen={false} />
-      <ToastContainer limit={1} theme="colored" />
+      <ToastContainer  limit={2} stacked={true} theme="colored" />
     </div>
   );
 }

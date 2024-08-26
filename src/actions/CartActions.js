@@ -13,7 +13,13 @@ import { db } from "../Libs/Firebase";
 import { toast } from "react-toastify";
 import { useProductActions } from "./ProductsActions";
 // Add Items to cart_items collection (cartandorders/userid/cart_items)
-const AddItemsToCart = async (userid, productid) => {
+const AddItemsToCart = async (
+  userid,
+  productid,
+  product_image,
+  product_price,
+  product_name
+) => {
   // cart collection reference
   const cartItemsCollectionRef = collection(
     db,
@@ -41,9 +47,15 @@ const AddItemsToCart = async (userid, productid) => {
   // Add a new doc
   await setDoc(newDocRef, {
     productid: productid,
+    product_name: product_name,
+    quantity: 1,
+    unit_price: product_price,
+    imageUrl: product_image,
     time_added: serverTimestamp(),
   }).then(() => {
-    toast.success("Item Added to Cart!");
+    toast.success(
+      `${product_name.split(" ").splice(0, 3).join(" ")} Added to Cart!`
+    );
   });
 };
 
@@ -91,19 +103,42 @@ const AddItemsToCart = async (userid, productid) => {
 const DeleteItemFromCart = async (docid, userid) => {
   // doc ref
   const DocRef = doc(db, "cartandorders", userid, "cart_items", docid);
-  // delete doc
-  await deleteDoc(DocRef)
-    .then(() => {
-      toast.success("Item Deleted from Cart!");
-    })
-    .catch((err) => {
-      toast.error("Error Deleting Item from Cart!" + err.message);
-    });
+
+  // promise toast
+  toast.promise(
+    new Promise((resolve, reject) => {
+      // delete doc with toast promise
+      deleteDoc(DocRef)
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => {
+          reject(err.message | err.reason);
+        });
+    }),
+    {
+      pending: "Removing Item from Cart..." ,
+      success: "Removed from Cart!",
+      error: " Removing Item from Cart Failed!",
+    }
+  );
+
+
+  // delete doc without promise toast
+  // await deleteDoc(DocRef)
+  //   .then(() => {
+  //     toast.info("Item Removed from Cart!", {
+  //       icon: "🗑️",
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     toast.error(" Removing Item from Cart Failed!" + err.message);
+  //   });
 };
 
 //Read all items in cart_items collection for current user
-const GetAllCartItems = async (userid)=>{
-    // cart collection reference
+const GetAllCartItems = async (userid) => {
+  // cart collection reference
   const cartItemsCollectionRef = collection(
     db,
     "cartandorders",
@@ -118,6 +153,33 @@ const GetAllCartItems = async (userid)=>{
     ...doc.data(),
   }));
   return cartItems;
-} 
+};
 
-export { AddItemsToCart, DeleteItemFromCart, GetAllCartItems };
+// clear all cart Items in the cart_items collection for current user
+const ClearAllCartItems = async (userid) => {
+  // cart collection reference
+  const cartItemsCollectionRef = collection(
+    db,
+    "cartandorders",
+    userid,
+    "cart_items"
+  );
+
+  // delete all items in the cart_items collection for current user
+  const cartItemsQuery = query(cartItemsCollectionRef);
+  const cartItemsSnapshot = await getDocs(cartItemsQuery);
+  cartItemsSnapshot.forEach(async (doc) => {
+    await deleteDoc(doc.ref);
+  });
+
+  // redirect to home
+
+  toast.success("Cart Cleared!");
+};
+
+export {
+  AddItemsToCart,
+  DeleteItemFromCart,
+  GetAllCartItems,
+  ClearAllCartItems,
+};

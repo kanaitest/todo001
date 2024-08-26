@@ -70,14 +70,15 @@ const ProductPage = () => {
         <p className="text-lg md:text-xl font-normal text-left bg-gradient-to-tr from-purple-700 to-cyan-900 bg-clip-text text-transparent md:w-[50%] mx-auto ">
           {data.description}
         </p>
-        <p className="text-base italic text-right  md:w-[50%] mx-auto text-yellow-700">Rating: {data.rating.rate}</p>
+        <p className="text-base italic text-right  md:w-[50%] mx-auto text-yellow-700">
+          Rating: {data.rating.rate}
+        </p>
 
         <div className="w-full flex justify-around align-middle items-center flex-col md:flex-row mx-auto md:max-w-[75%]">
           <p className="text-2xl font-bold bg-gradient-to-b from-cyan-400 to-slate-500 bg-clip-text text-transparent group-hover:text-cyan-400 transition-all duration-300 ">
-           Price:  ${data.price}
+            Price: ${data.price}
           </p>
-
-          <AddToCartBtn size={'lg'} item={data}/>
+          <AddToCartBtn size="lg" item={data} />
         </div>
       </div>
     );
