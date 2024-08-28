@@ -8,6 +8,7 @@ import {
   setDoc,
   serverTimestamp,
   deleteDoc,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "../Libs/Firebase";
 import { toast } from "react-toastify";
@@ -37,7 +38,7 @@ const AddItemsToCart = async (
   // if snapshot has data then product exists and cannot be updates
   if (existingDocsnapshot.docs.length != 0) {
     // do not update
-    toast.error("Item Already Exist in Cart!");
+    toast.info("Item Already Exist in Cart!");
     return false;
   }
 
@@ -117,12 +118,11 @@ const DeleteItemFromCart = async (docid, userid) => {
         });
     }),
     {
-      pending: "Removing Item from Cart..." ,
+      pending: "Removing Item from Cart...",
       success: "Removed from Cart!",
       error: " Removing Item from Cart Failed!",
     }
   );
-
 
   // delete doc without promise toast
   // await deleteDoc(DocRef)
@@ -146,7 +146,10 @@ const GetAllCartItems = async (userid) => {
     "cart_items"
   );
 
-  const cartItemsQuery = query(cartItemsCollectionRef);
+  const cartItemsQuery = query(
+    cartItemsCollectionRef,
+    orderBy("time_added", "desc")
+  );
   const cartItemsSnapshot = await getDocs(cartItemsQuery);
   const cartItems = cartItemsSnapshot.docs.map((doc) => ({
     id: doc.id,
@@ -177,9 +180,62 @@ const ClearAllCartItems = async (userid) => {
   toast.success("Cart Cleared!");
 };
 
+// checkout function:
+//:: Takes all the cart Items and makes the orders by adding the into the orders list
+
+const CheckOutAllItems = async ({ userid }) => {
+  // cart collection reference
+  const cartItemsCollectionRef = collection(
+    db,
+    "cartandorders",
+    userid,
+    "cart_items"
+  );
+  // create a new order collection reference
+  const ordersCollectionRef = collection(db, "cartandorders", userid, "orders");
+
+  // get CartItems and loop through all the cart items and add them to the orders collection
+  const cartItemsQuery = query(cartItemsCollectionRef);
+  const cartItemsSnapshot = await getDocs(cartItemsQuery);
+  try {
+    cartItemsSnapshot.forEach(async (record) => {
+      // create a new doc ref in the orders collection
+      const newOrderDocRef = doc(ordersCollectionRef);
+      // add the cart item to the orders collection
+      await setDoc(newOrderDocRef, {
+        productid: record.data().productid,
+        product_name: record.data().product_name,
+        imageUrl: record.data().imageUrl,
+        quantity: record.data().quantity,
+        unit_price: record.data().unit_price,
+        price: record.data().quantity * record.data().unit_price,
+        time_ordered: serverTimestamp(),
+        status: "pending",
+        time_delivered: null,
+        time_cancelled: null,
+        time_returned: null,
+        time_shipped: null,
+      })
+        .then(async () => {
+          // delete the cart item from the cart_items collection
+          await deleteDoc(
+            doc(db, "cartandorders", userid, "cart_items", record.id)
+          );
+        })
+        .then(() => {
+          // toast success checkout
+          toast.success("Orders placed successfully!");
+        });
+    });
+  } catch (err) {
+    toast.error("Error placing orders!" + err?.messages);
+  }
+};
+
 export {
   AddItemsToCart,
   DeleteItemFromCart,
   GetAllCartItems,
   ClearAllCartItems,
+  CheckOutAllItems,
 };

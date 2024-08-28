@@ -1,5 +1,6 @@
 import React from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import { MdOutlineRemoveShoppingCart } from "react-icons/md";
+
 import { Link } from "react-router-dom";
 import { DeleteItemFromCart } from "../actions/CartActions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -75,12 +76,12 @@ const CartItemCard = ({ item, userid }) => {
         >
           {mutation.isPending ? (
             <>
-              <FaTrashAlt className="w-4 h-4 text-yellow-300 animate-spin delay-0" />
+              <MdOutlineRemoveShoppingCart className="w-4 h-4 text-yellow-300 animate-spin delay-0" />
               <span className="text-lime-600 font-thin ml-3">removing ...</span>
             </>
           ) : (
             <>
-              <FaTrashAlt className="w-4 h-4 text-red-300" />
+              <MdOutlineRemoveShoppingCart className="w-4 h-4 text-red-300" />
               <span className="text-red-600 font-thin ml-3">remove</span>
             </>
           )}

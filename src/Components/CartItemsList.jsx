@@ -4,6 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import CartItemCard from "./CartItemCard";
 import { ClearAllCartItems } from "../actions/CartActions";
 import { useNavigate } from "react-router-dom";
+import CheckoutButton from "./CheckoutButton";
+import { FaTrashAlt } from "react-icons/fa";
 
 const CartItemsList = ({ user }) => {
   const navigate = useNavigate();
@@ -52,12 +54,8 @@ const CartItemsList = ({ user }) => {
     const TotalCartItemsCost = data.reduce((total, item) => {
       return total + item.unit_price * item.quantity;
     }, 0);
-
-    console.log("rendered");
     return (
       <div className="w-full p-4 flex flex-col items-center justify-center gap-4">
-        
-
         <div className="w-full flex flex-col items-center justify-center gap-4 mx-auto">
           {data.map((item) => (
             <CartItemCard key={item.id} userid={user.uid} item={item} />
@@ -67,14 +65,19 @@ const CartItemsList = ({ user }) => {
           <p className="text-xl font-semibold">
             Total Cost: {TotalCartItemsCost}
           </p>
+          {/* checkout button */}
+
+          <CheckoutButton userid={user.uid} />
+          {/* clear cart button */}
           <button
             onClick={async () =>
               await ClearAllCartItems(user.uid).then(() => {
                 queryClient.resetQueries(["cart", user.uid]);
               })
             }
-            className="bg-red-600 hover:bg-red-300 text-black p-2 rounded-md"
+            className="bg-red-300 hover:bg-red-400 text-white p-2 rounded-md flex align-middle justify-center"
           >
+            <FaTrashAlt className="w-6 h-6 mr-2" />
             Clear Cart
           </button>
         </div>
