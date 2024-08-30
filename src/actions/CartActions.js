@@ -9,6 +9,8 @@ import {
   serverTimestamp,
   deleteDoc,
   orderBy,
+  updateDoc,
+  increment,
 } from "firebase/firestore";
 import { db } from "../Libs/Firebase";
 import { toast } from "react-toastify";
@@ -46,18 +48,22 @@ const AddItemsToCart = async (
   const newDocRef = doc(cartItemsCollectionRef);
 
   // Add a new doc
-  await setDoc(newDocRef, {
-    productid: productid,
-    product_name: product_name,
-    quantity: 1,
-    unit_price: product_price,
-    imageUrl: product_image,
-    time_added: serverTimestamp(),
-  }).then(() => {
-    toast.success(
-      `${product_name.split(" ").splice(0, 3).join(" ")} Added to Cart!`
-    );
-  });
+  try {
+    await setDoc(newDocRef, {
+      productid: productid,
+      product_name: product_name,
+      quantity: 1,
+      unit_price: product_price,
+      imageUrl: product_image,
+      time_added: serverTimestamp(),
+    }).then(() => {
+      toast.success(
+        `${product_name.split(" ").splice(0, 3).join(" ")} Added to Cart!`
+      );
+    });
+  } catch (err) {
+    toast.error("Error Adding Item to Cart!" + err.message);
+  }
 };
 
 // Add Items to orders collection (cartandorders/userid/orders)
@@ -232,10 +238,34 @@ const CheckOutAllItems = async ({ userid }) => {
   }
 };
 
+// Change quantity of current cart item in cart_items collection
+const UpdateCartItemQuantity = async ({ops}) => {
+  console.log(ops);
+  const cartItemsCollectionRef = collection(
+    db,
+    "cartandorders",
+    ops.userid,
+    "cart_items"
+  );
+
+  const cartItemDocRef = doc(cartItemsCollectionRef, ops.cartItemId);
+  // update the quantity depending on mode (increase or decrease)
+  if (ops.mode === "increase") {
+    return await updateDoc(cartItemDocRef, {
+      quantity: increment(1),
+    });
+  } else if (ops.mode === "decrease") {
+    return await updateDoc(cartItemDocRef, {
+      quantity: increment(-1),
+    });
+  }
+};
+
 export {
   AddItemsToCart,
   DeleteItemFromCart,
   GetAllCartItems,
   ClearAllCartItems,
   CheckOutAllItems,
+  UpdateCartItemQuantity,
 };

@@ -4,10 +4,11 @@ import { MdOutlineRemoveShoppingCart } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { DeleteItemFromCart } from "../actions/CartActions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import CartItemsQuantityControls from "./CartItemsQuantityControls";
 
 const CartItemCard = ({ item, userid }) => {
   // destructure item
-  const { productid, product_name, quantity, unit_price, imageUrl, id } = item;
+  const { productid, product_name, unit_price, imageUrl, id } = item;
 
   // query client comsumption
   const queryClient = useQueryClient();
@@ -51,23 +52,9 @@ const CartItemCard = ({ item, userid }) => {
         </div>
 
         {/* quantity Controls */}
-        <div className="w-full flex flex-col mx-auto  ">
-          <p className="text-slate-600 font-light text-center">Quantity</p>
-          <div className="flex items-center justify-center gap-4">
-            <button className="bg-slate-200 hover:bg-slate-300 text-black p-2 rounded-md w-8 h-8 flex justify-center items-center align-middle text-center">
-              -
-            </button>
-            <p className="text-xl font-semibold">{quantity}</p>
-            <button className="bg-slate-200 hover:bg-slate-300 text-black p-2 rounded-md w-8 h-8 flex justify-center items-center align-middle text-center">
-              +
-            </button>
-          </div>
-        </div>
+        <CartItemsQuantityControls  item={item} userid={userid} />
       </div>
       <div className="flex flex-col items-center justify-center gap-4 self-end md:self-start ">
-        {/* <p className="text-xl font-semibold">
-          Subtotal: ${quantity * unit_price}
-        </p> */}
         <button
           onClick={() => {
             mutation.mutate();
